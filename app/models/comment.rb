@@ -11,6 +11,7 @@
 #
 
 class Comment < ApplicationRecord
+  belongs_to :user
   validates(:commenter, {:presence => true })
   validates(:photo, {:presence => true })
 

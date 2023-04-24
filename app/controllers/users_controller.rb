@@ -76,27 +76,18 @@ class UsersController < ApplicationController
   def authenticate
     un = params.fetch("input_username")
     pw = params.fetch("input_password")
-
-    user = User.where({ username: un}).first
-
-    if user == nil 
-      redirect_to("/user_sign_in", { :alert => "No one by that name"})
-    else 
-      if user.authenticate(pw)
-        session.store(:user_id, user.id)
-
-      redirect_to("/", { :notice => "Welcome back, " + user.username + "!"})
-
-      else 
-        redirect_to("/user_sign_in", { :alert => "Please try agin"})
-    end
-
+    user = User.where(username: un).first
+  
+    return redirect_to("/user_sign_in", alert: "No one by that name") if user.nil?
+    
+    user.authenticate(pw) ?
+      (session.store(:user_id, user.id); redirect_to("/", notice: "Welcome back, #{user.username}!")) :
+      redirect_to("/user_sign_in", alert: "Please try again")
   end
 end
 
 
 
-end
   # get the username from params
     # get the pw from params
     #look up the record from the db matching the username

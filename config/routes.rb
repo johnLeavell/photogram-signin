@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   get("/user_sign_up", { controller: "users", :action => "sign_up"})
   get("/user_sign_out", { controller: "users", :action => "sign_out"})
   get("/user_sign_in", { controller: "users", :action => "sign_in"})
-  get("/verify_credentials", { controller: "users", action: "authenticate"})
+  
+  post("/verify_credentials", { controller: "users", action: "authenticate"})
 
 
   # UPDATE
@@ -42,7 +43,7 @@ Rails.application.routes.draw do
   # Comment routes
 
   # CREATE
-  get("/insert_comment_record", { :controller => "comments", :action => "create" })
+  post("/insert_comment_record", { :controller => "comments", :action => "create" })
 
   # DELETE
 
