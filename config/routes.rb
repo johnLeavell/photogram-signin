@@ -10,8 +10,13 @@ Rails.application.routes.draw do
   # READ
   get("/users", {:controller => "users", :action => "index"})
   get("/users/:the_username", {:controller => "users", :action => "show"})
-  
-  get("/user_sign_up", { controller: "users", :action => "new_registration_form"})
+
+  get("/user_sign_up", { controller: "users", :action => "sign_up"})
+  get("/user_sign_out", { controller: "users", :action => "sign_out"})
+  get("/user_sign_in", { controller: "users", :action => "sign_in"})
+  get("/verify_credentials", { controller: "users", action: "authenticate"})
+
+
   # UPDATE
   get("/update_user/:the_user_id", {:controller => "users", :action => "update" })
 

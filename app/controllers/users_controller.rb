@@ -3,6 +3,8 @@ class UsersController < ApplicationController
 
     render({ template: "users/signup_form.html.erb"})
   end
+
+
   def index
     @users = User.all.order({ :username => :asc })
 
@@ -20,10 +22,19 @@ class UsersController < ApplicationController
     user = User.new
 
     user.username = params.fetch("input_username")
+    user.password = params.fetch("input_password")
+    user.password_confirmation = params.fetch("input_password_confirmation")
 
-    user.save
+    save_status = user.save
 
-    redirect_to("/users/#{user.username}")
+    if save_status == true
+      session.store( :user_id, user.id )
+
+    redirect_to("/users/#{user.username}", { notice: "Welcome, " + user.username + "!" })
+
+    else
+      redirect_to("/user_sign_up", { alert: user.errors.full_messages.to_sentence })
+    end
   end
 
   def update
@@ -47,4 +58,52 @@ class UsersController < ApplicationController
     redirect_to("/users")
   end
 
+  def sign_out
+    reset_session
+
+    redirect_to("/", { :notice => "See ya later!"})
+  end
+
+  def sign_in
+    render({ template: "users/signin_form.html.erb"})
+  end
+
+  def sign_up
+
+    render({ template: "users/signup_form.html.erb"})
+  end
+
+  def authenticate
+    un = params.fetch("input_username")
+    pw = params.fetch("input_password")
+
+    user = User.where({ username: un}).first
+
+    if user == nil 
+      redirect_to("/user_sign_in", { :alert => "No one by that name"})
+    else 
+      if user.authenticate(pw)
+        session.store(:user_id, user.id)
+
+      redirect_to("/", { :notice => "Welcome back, " + user.username + "!"})
+
+      else 
+        redirect_to("/user_sign_in", { :alert => "Please try agin"})
+    end
+
+  end
 end
+
+
+
+end
+  # get the username from params
+    # get the pw from params
+    #look up the record from the db matching the username
+    # if no record, redirect back to sign in form
+
+    # if recond, check pw matches,
+    # if not, redirect back to sign in form
+
+    # if so, set the cookie
+    # redirect to homepage
